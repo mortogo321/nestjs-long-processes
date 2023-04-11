@@ -12,6 +12,15 @@
 
 Nest.js and RabbitMQ for long processes
 
+## Dockernize
+```bash
+Up:
+$ docker-composer up -d
+
+Down:
+$ docker-compose down --rmi all -v --remove-orphans
+```
+
 ## Installation
 
 ```bash
