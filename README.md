@@ -21,34 +21,8 @@ Down:
 $ docker-compose down --rmi all -v --remove-orphans
 ```
 
-## Installation
+## Development
 
-```bash
-$ yarn install
-```
-
-## Running the app
-
-```bash
-# development
-$ yarn run start
-
-# watch mode
-$ yarn run start:dev
-
-# production mode
-$ yarn run start:prod
-```
-
-## Test
-
-```bash
-# unit tests
-$ yarn run test
-
-# e2e tests
-$ yarn run test:e2e
-
-# test coverage
-$ yarn run test:cov
-```
+Worker: http://localhost:3000  
+RabbitMQ: http://localhost:15672  
+(u: admin, p: password@01)
