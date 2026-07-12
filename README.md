@@ -1,28 +1,47 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# NestJS Long-Running Process Scaffold (RabbitMQ)
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A NestJS monorepo scaffold for offloading long-running work out of the HTTP request/response cycle using RabbitMQ. It sets up a multi-app workspace (`producer`, `consumer`, `worker`) plus a shared RabbitMQ client module, as the foundation for a producer -> queue -> worker pipeline.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
+## What's inside
 
-## Description
+- Nest CLI monorepo with three separately deployable apps: `producer`, `consumer`, `worker`
+- Shared `RmqModule` / `RmqService` (`libs/common`) that registers a RabbitMQ client per app via `@nestjs/microservices`, with manual message acknowledgment and persistent messages
+- RabbitMQ connection URL and queue names are configuration-driven via `@nestjs/config`
+- Docker Compose setup that runs the `worker` app alongside a RabbitMQ broker (management UI included)
 
-Nest.js and RabbitMQ for long processes
+## Current state
 
-## Dockernize
+This is infrastructure scaffolding rather than a finished pipeline: the shared RabbitMQ module, config wiring, and Docker setup are in place, but the `producer`, `consumer`, and `worker` controllers currently only expose the default Nest starter endpoint. The actual message publish/consume logic between the apps has not been wired up yet.
+
+## Tech stack
+
+- NestJS (`@nestjs/common`, `@nestjs/core`, `@nestjs/microservices`, `@nestjs/platform-express`, `@nestjs/config`)
+- RabbitMQ via `amqplib` and `amqp-connection-manager`
+- TypeScript, Jest for unit tests
+
+## Quickstart
+
 ```bash
-Up:
-$ docker-composer up -d
+yarn install
 
-Down:
-$ docker-compose down --rmi all -v --remove-orphans
+# copy the env template for the worker app
+cp apps/worker/.env.example apps/worker/.env
+
+# start the worker app + RabbitMQ broker
+docker compose up -d
 ```
 
-## Development
+- Worker app: http://localhost:3000
+- RabbitMQ management UI: http://localhost:15672 (`admin` / `password@01`)
 
-Worker: http://localhost:3000  
-RabbitMQ: http://localhost:15672  
-(u: admin, p: password@01)
+To run an individual app directly (without Docker):
+
+```bash
+yarn start:dev worker   # or producer / consumer
+```
+
+## Tests
+
+```bash
+yarn test
+```
